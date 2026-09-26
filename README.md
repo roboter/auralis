@@ -25,7 +25,7 @@ npm run build
 npm run typecheck
 ```
 
-Pushes and pull requests run typecheck, unit tests, the auth invariant, and a production build via GitHub Actions.
+Pushes and pull requests run typecheck, unit tests, and a production build via GitHub Actions.
 
 ## Use
 
