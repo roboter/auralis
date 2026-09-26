@@ -87,6 +87,17 @@ export function projectRoot() {
   return dirname(dirname(fileURLToPath(import.meta.url)));
 }
 
+/** Run Vite's JavaScript CLI directly so Windows does not need to spawn vite.cmd. */
+export function resolveCommand(command, args, root = projectRoot()) {
+  if (command === "vite") {
+    return {
+      command: process.execPath,
+      args: [join(root, "node_modules", "vite", "bin", "vite.js"), ...args],
+    };
+  }
+  return { command, args };
+}
+
 /**
  * Whether `moduleUrl` is the script node was asked to run.
  *
@@ -111,7 +122,8 @@ function main(argv) {
     process.exit(2);
   }
   const env = mergeAppEnv(readAppEnv(projectRoot()), process.env);
-  const child = spawn(command, args, { stdio: "inherit", env });
+  const resolved = resolveCommand(command, args);
+  const child = spawn(resolved.command, resolved.args, { stdio: "inherit", env });
   // The dev server is long-running and is stopped by signalling this wrapper.
   for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
     process.on(signal, () => child.kill(signal));

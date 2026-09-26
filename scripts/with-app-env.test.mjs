@@ -11,6 +11,7 @@ import {
   parseAppEnv,
   projectRoot,
   readAppEnv,
+  resolveCommand,
 } from "./with-app-env.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -61,6 +62,18 @@ test("an explicit process-env override wins over the file", () => {
 
 test("the template ships auth off", () => {
   assert.deepEqual(readAppEnv(projectRoot()), { VITE_AUTH_ENABLED: "false" });
+});
+
+test("Vite is launched through Node instead of its Windows command shim", () => {
+  const args = ["dev", "--host", "0.0.0.0"];
+  assert.deepEqual(resolveCommand("vite", args, "C:/workspace"), {
+    command: process.execPath,
+    args: [join("C:/workspace", "node_modules", "vite", "bin", "vite.js"), ...args],
+  });
+  assert.deepEqual(resolveCommand("node", ["script.mjs"], "C:/workspace"), {
+    command: "node",
+    args: ["script.mjs"],
+  });
 });
 
 test("vite loadEnv resolves the wrapped value", () => {
