@@ -1,5 +1,7 @@
 # Auralis
 
+[![CI](https://github.com/roboter/auralis/actions/workflows/ci.yml/badge.svg)](https://github.com/roboter/auralis/actions/workflows/ci.yml)
+
 Local text-to-speech studio. No account. No subscription.
 
 Write a prompt, pick a language and voice, then speak. Two engines:
@@ -22,6 +24,8 @@ Open the app at the URL Vite prints (default port 8080).
 npm run build
 npm run typecheck
 ```
+
+Pushes and pull requests run typecheck, unit tests, the auth invariant, and a production build via GitHub Actions.
 
 ## Use
 
